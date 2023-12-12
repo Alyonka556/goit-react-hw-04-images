@@ -1,46 +1,43 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { CloseButton, ModalContent, ModalWrapper } from './Modal.styled.js';
 
-export class Modal extends React.Component {
-  componentDidMount() {
-    window.addEventListener('keydown', this.handleKeyDown);
-  }
+export const Modal = ({ onClose, url }) => {
+  useEffect(() => {
+    const handleKeyDownEvent = event => {
+      if (event.code === 'Escape') {
+        onClose();
+      }
+    };
 
-  componentWillUnmount() {
-    window.removeEventListener('keydown', this.handleKeyDown);
-  }
+    window.addEventListener('keydown', handleKeyDownEvent);
 
-  handleKeyDown = e => {
-    if (e.code === 'Escape') {
-      this.props.onClose();
-    }
-  };
+    return () => {
+      window.removeEventListener('keydown', handleKeyDownEvent);
+    };
+  }, [onClose]);
 
-  handleBackdropClick = e => {
+  const handleBackdropClick = e => {
     if (e.currentTarget === e.target) {
-      this.props.onClose();
+      onClose();
     }
   };
 
-  closeModal = () => {
-    this.props.onClose();
+  const closeModal = () => {
+    onClose();
   };
 
-  render() {
-    const { url } = this.props;
-    return (
-      <ModalWrapper onClick={this.handleBackdropClick}>
-        <ModalContent>
-          <img
-            src={url}
-            alt="preview img"
-            onError={e => {
-              console.error('Image failed to load', e);
-            }}
-          />
-          <CloseButton onClick={this.closeModal}>×</CloseButton>
-        </ModalContent>
-      </ModalWrapper>
-    );
-  }
-}
+  return (
+    <ModalWrapper onClick={handleBackdropClick}>
+      <ModalContent>
+        <img
+          src={url}
+          alt="preview img"
+          onError={e => {
+            console.error('Image failed to load', e);
+          }}
+        />
+        <CloseButton onClick={closeModal}>×</CloseButton>
+      </ModalContent>
+    </ModalWrapper>
+  );
+};
