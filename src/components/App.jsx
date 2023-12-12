@@ -18,10 +18,10 @@ export const App = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [largeImage, setLargeImage] = useState(null);
 
-  const getImages = useCallback(async (userInput, page) => {
+  const getImages = useCallback(async () => {
     try {
       setIsLoading(true);
-      const { hits } = await fetchImages(userInput, page);
+      const { hits } = await fetchImages(search, pageNumber);
       if (hits.length > 0) {
         setImages(prevImages => [...prevImages, ...hits]);
         setIsLoading(false);
@@ -33,13 +33,13 @@ export const App = () => {
       setError('Failed to fetch images');
       setIsLoading(false);
     }
-  }, []);
+  }, [search, pageNumber]);
 
   useEffect(() => {
     if (!search.trim()) {
       return;
     }
-    getImages(search, pageNumber);
+    getImages();
   }, [search, pageNumber, getImages]);
 
   const loadMoreImages = () => {
