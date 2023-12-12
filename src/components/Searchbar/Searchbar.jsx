@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   StyledSearchbar,
   SearchForm,
@@ -7,44 +7,39 @@ import {
   StyledSearchFormInput,
 } from './Searchbar.styled';
 
-export class Searchbar extends React.Component {
-  state = {
-    searchQuery: '',
-  };
+export const Searchbar = ({ onSubmit }) => {
+  const [searchQuery, setSearchQuery] = useState('');
 
-  handleSubmit = e => {
+  const handleSubmit = e => {
     e.preventDefault();
 
-    if (this.state.searchQuery.trim() !== '') {
-      this.props.onSubmit(this.state.searchQuery);
-      this.setState({ searchQuery: '' });
+    if (searchQuery.trim() !== '') {
+      onSubmit(searchQuery);
+      setSearchQuery('');
     }
   };
 
-  handleChange = e => {
-    this.setState({ searchQuery: e.target.value });
+  const handleChange = e => {
+    setSearchQuery(e.target.value);
   };
 
-  render() {
-    return (
-      <StyledSearchbar onSubmit={this.handleSubmit}>
-        <SearchForm>
-          <StyledSearchFormInput
-            type="text"
-            value={this.state.searchQuery}
-            onChange={this.handleChange}
-            autoComplete="off"
-            autoFocus
-            placeholder="Search images and photos"
-            required
-          />
-        </SearchForm>
+  return (
+    <StyledSearchbar onSubmit={handleSubmit}>
+      <SearchForm>
+        <StyledSearchFormInput
+          type="text"
+          value={searchQuery}
+          onChange={handleChange}
+          autoComplete="off"
+          autoFocus
+          placeholder="Search images and photos"
+          required
+        />
+      </SearchForm>
 
-        <SearchFormBtn type="submit" onClick={this.handleSubmit}>
-          {' '}
-          <StyledSearchFormBtnLabel>Search</StyledSearchFormBtnLabel>
-        </SearchFormBtn>
-      </StyledSearchbar>
-    );
-  }
-}
+      <SearchFormBtn type="submit" onClick={handleSubmit}>
+        <StyledSearchFormBtnLabel>Search</StyledSearchFormBtnLabel>
+      </SearchFormBtn>
+    </StyledSearchbar>
+  );
+};

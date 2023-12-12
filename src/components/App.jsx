@@ -43,8 +43,7 @@ export const App = () => {
   }, [search, pageNumber, getImages]);
 
   const loadMoreImages = () => {
-    const nextPage = pageNumber + 1;
-    setPageNumber(nextPage);
+    setPageNumber(prevPage => prevPage + 1);
   };
 
   const onSearch = search => {
